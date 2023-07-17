@@ -165,7 +165,7 @@ int interactive(info_t *);
 int is_delim(char, char *);
 int _isalpha(int);
 int _atoi(char *);
-
+void prompt(void);
 /* toem_errors1.c */
 int _erratoi(char *);
 void print_error(info_t *, char *);
