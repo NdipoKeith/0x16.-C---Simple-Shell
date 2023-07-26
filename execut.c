@@ -1,50 +1,48 @@
 #include "shell.h"
 
 /**
- * execute - should execute a command with arguments
- * @argv: an array of strings containing the command and its arguments
- *
- * Return: the exit status of the executed command
+ * execute - execute a command with its entire path variables
+ * @data: a pointer to the program's data
+ * Return: If sucess returns zero, otherwise, return -1.
  */
-int execute(char **argv)
+int execute(data_of_program *data)
 {
-	pid_t id;
-	int status = 0;
-	char *cd_path, *envp[2];
+	int retval = 0, status;
+	pid_t pidd;
 
-	if (argv == NULL || *argv == NULL)
-		return (status);
-	if (check_for_builtin(argv))
-		return (status);
+	/* check for program in built ins */
+	retval = builtins_list(data);
+	if (retval != -1)/* if program was found in built ins */
+		return (retval);
 
-	id = fork();
-	if (id == -1)
-	{
-		_puterror("fork");
-		return (1);
-	}
-	if (id == -1)
-		perror(argv[0]), free_tokens(argv), free_last_input();
-	if (id == 0)
-	{
-		envp[0] = get_path();
-		envp[1] = NULL;
-		cd_path = NULL;
-		if (argv[0][0] != '/')
-			cd_path = find_in_path(argv[0]);
-		if (cd_path == NULL)
-			cd_path = argv[0];
-		if (execve(cd_path, argv, envp) == -1)
-		{
-			perror(argv[0]), free_tokens(argv), free_last_input();
-			exit(EXIT_FAILURE);
-		}
+	/* check for program file system */
+	retval = find_program(data);
+	if (retval)
+	{/* if program not found */
+		return (retval);
 	}
 	else
-	{
-		do {
-			waitpid(id, &status, WUNTRACED);
-		} while (!WIFEXITED(status) && !WIFSIGNALED(status));
+	{/* if program was found */
+		pidd = fork(); /* create a child process */
+		if (pidd == -1)
+		{ /* if the fork call failed */
+			perror(data->command_name);
+			exit(EXIT_FAILURE);
+		}
+		if (pidd == 0)
+		{/* I am the child process, I execute the program*/
+			retval = execve(data->tokens[0], data->tokens, data->env);
+			if (retval == -1) /* if error when execve*/
+				perror(data->command_name), exit(EXIT_FAILURE);
+		}
+		else
+		{/* I am the father, I wait and check the exit status of the child */
+			wait(&status);
+			if (WIFEXITED(status))
+				errno = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+				errno = 128 + WTERMSIG(status);
+		}
 	}
-	return (status);
+	return (0);
 }
