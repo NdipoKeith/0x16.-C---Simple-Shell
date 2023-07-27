@@ -7,23 +7,26 @@
 #define MAX_LINE_LENGTH 80
 #define MAX_ARGS 10
 
-int main() {
-    char line[MAX_LINE_LENGTH];
-    char* args[MAX_ARGS];
-    int status;
+int main()
+{
+	char line[MAX_LINE_LENGTH];
+	char* args[MAX_ARGS];
+	int status;
+	
+	while (1)
+	{
+	printf("shell> ");
+	getline(line, MAX_LINE_LENGTH, stdin);
 
-    while (1) {
-        printf("shell> ");
-        getline(line, MAX_LINE_LENGTH, stdin);
-
-        // tokenize the input
-        int i = 0;
-        args[i] = strtok(line, " \n");
-        while (args[i] != NULL) {
-            i++;
-            args[i] = strtok(NULL, " \n");
-        }
-        args[i] = NULL;
+	// tokenize the input
+	int i = 0;
+	args[i] = strtok(line, " \n");
+	while (args[i] != NULL)
+	{
+		i++;
+		args[i] = strtok(NULL, " \n");
+	}
+	args[i] = NULL;
 
         // handle built-in commands
         if (strcmp(args[0], "cd") == 0) {

@@ -232,5 +232,10 @@ void check_chain(info_t *, char *, size_t *, size_t, size_t);
 int replace_alias(info_t *);
 int replace_vars(info_t *);
 int replace_string(char **, char *);
+char *find_in_path(char *command);
 
+/* free.c */
+void free_error(char **argv, char *arg);
+void free_tokens(char **ptr);
+void free_path(void);
 #endif

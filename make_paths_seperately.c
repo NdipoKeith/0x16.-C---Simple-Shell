@@ -1,4 +1,4 @@
-#include "main.h"
+#include "shell.h"
 /**
  * make_paths_seperately - splits path
  * @paths: paths string
@@ -7,14 +7,14 @@
 char **make_paths_seperately(char *paths)
 {
 	char *token;
-	char **tokens = malloc(BUFF_SIZE * sizeof(char *));
+	char **tokens = malloc(BUFFER_SIZE * sizeof(char *));
 	int num_tokens = 0, i;
 	char *paths_copy;
 
 	paths_copy = strdup(paths);
 	if (tokens == NULL || paths_copy == NULL)
 		return (NULL);
-	token = _strtok(paths_copy, ":");
+	token = strtok(paths_copy, ":");
 	while (token != NULL)
 	{
 		tokens[num_tokens] = strdup(token);
@@ -27,7 +27,7 @@ char **make_paths_seperately(char *paths)
 			return (NULL);
 		}
 		num_tokens++;
-		token = _strtok(NULL, ":");
+		token = strtok(NULL, ":");
 	}
 	tokens[num_tokens] = NULL;
 	free(paths_copy);
