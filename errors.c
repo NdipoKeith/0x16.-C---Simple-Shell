@@ -21,10 +21,10 @@ void _eputs(char *str)
 
 /**
  * _eputchar - writes the character c to stderr
- * @c: the character to print
+ * @c: The character to print
  *
  * Return: On success 1.
- * On error -1 is returned, and errno is set appropriately
+ * On error, -1 is returned, and errno is set appropriately.
  */
 int _eputchar(char c)
 {
@@ -43,11 +43,11 @@ int _eputchar(char c)
 
 /**
  * _putfd - writes the character c to given fd
- * @c: the character to print
- * @fd: the filedescriptor to write to
+ * @c: The character to print
+ * @fd: The filedescriptor to write to
  *
  * Return: On success 1.
- * On error -1 is returned, and errno is set appropriately
+ * On error, -1 is returned, and errno is set appropriately.
  */
 int _putfd(char c, int fd)
 {
